@@ -1,0 +1,26 @@
+{
+  "name": "user-management-lg-id-training",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "cd client && npm install && cd .. && cd server && npm install",
+    "client": "cd client && npm start",
+    "server": "cd server && npm start",
+    "start": "concurrently npm:client npm:server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quanjichun/user-management-lg-id-training.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quanjichun/user-management-lg-id-training/issues"
+  },
+  "homepage": "https://github.com/quanjichun/user-management-lg-id-training#readme",
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
