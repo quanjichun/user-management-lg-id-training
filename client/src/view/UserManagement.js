@@ -12,7 +12,7 @@ const RootDiv = styled.div`
 `;
 
 const UserManagement = () => {
-  const { loading, columns, data } = useUsers();
+  const { loading, data, addUser, updateUser, deleteUser } = useUsers();
 
   return (
     <RootDiv>
@@ -20,7 +20,13 @@ const UserManagement = () => {
       {loading ? (
         <div>loading...</div>
       ) : (
-        <UserTable title="Users" data={data} columns={columns} />
+        <UserTable
+          title="Users"
+          data={data.users}
+          addUser={addUser}
+          updateUser={updateUser}
+          deleteUser={deleteUser}
+        />
       )}
     </RootDiv>
   );

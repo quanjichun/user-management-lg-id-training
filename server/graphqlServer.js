@@ -9,10 +9,33 @@ const typeDefs = gql`
     team: String!
   }
 
+  input UserInput {
+    id: Int
+    name: String!
+    email: String!
+    job_title: String!
+    team: String!
+  }
+
   type Query {
     users: [User]
   }
+
+  type Mutation {
+    addUser(user: UserInput): User
+    updateUser(user: UserInput): User
+    deleteUser(id: Int): Int
+  }
 `;
+
+const users = [{
+  id: 1,
+  name: "홍길동",
+  email: "hgd@lge.com",
+  job_title: "연구원",
+  team: "IDDX Task",
+}];
+let userIndex = 1;
 
 const resolvers = {
   Query: {
@@ -22,15 +45,39 @@ const resolvers = {
       console.log(context);
       console.log("#####");
 
-      return [{
-        id: 1,
-        name: "홍길동",
-        email: "hgd@lge.com",
-        job_title: "연구원",
-        team: "IDDX Task",
-      }];
+      return users;
     },
   },
+  Mutation: {
+    addUser: async (root, {user}) => {
+      const newUser = {
+        id: ++userIndex,
+        ...user
+      };
+      users.push(newUser);
+      console.log(users);
+      return newUser;
+    },
+    updateUser: async (root, {user}) => {
+      console.log(user);
+      const index = users.findIndex(d => d.id === user.id);
+      const updateUser = {
+        ...users[index],
+        ...user
+      };
+      users[index] = updateUser;
+      console.log(users);
+
+      return updateUser;
+    },
+    deleteUser: async (root, {id}) => {
+      const index = users.findIndex(d => d.id === id);
+      users.splice(index, 1);
+      console.log(users);
+
+      return id;
+    }
+  }
 };
 
 const apolloServer = new ApolloServer({

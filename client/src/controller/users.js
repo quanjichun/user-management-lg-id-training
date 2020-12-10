@@ -1,5 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
-import { useMemo } from "react";
+import { gql, useQuery, useMutation } from "@apollo/client";
 
 const GET_USERS = gql`
   query users {
@@ -13,16 +12,64 @@ const GET_USERS = gql`
   }
 `;
 
-export const useUsers = () => {
-  const { loading, data } = useQuery(GET_USERS);
-  const columns = useMemo(() => [
-    {key: "name", label: "Name"},
-    {key: "email", label: "Email"},
-    {key: "job_title", label: "Job Title"},
-    {key: "team", label: "Team"},
-  ], []);
+const ADD_USER = gql`
+  mutation addUser($user: UserInput) {
+    addUser(user: $user) {
+      id
+      name
+      email
+      job_title
+      team
+    }
+  }
+`;
 
-  return { loading, data, columns };
+const UPDATE_USER = gql`
+  mutation updateUser($user: UserInput) {
+    updateUser(user: $user) {
+      id
+      name
+      email
+      job_title
+      team
+    }
+  }
+`;
+
+const DELETE_USER = gql`
+  mutation deleteUser($id: Int) {
+    deleteUser(id: $id)
+  }
+`;
+
+export const useUsers = () => {
+  const [addUser] = useMutation(ADD_USER, {
+    update(cache, { data: { addUser } }) {
+      const query = { query: GET_USERS };
+      const cacheUsers = cache.readQuery(query);
+      cache.writeQuery({ ...query, data: { users: [...cacheUsers.users, addUser] } });
+    },
+  });
+  const [updateUser] = useMutation(UPDATE_USER);
+  const [deleteUser] = useMutation(DELETE_USER, {
+    update(cache, { data: { deleteUser } }) {
+      const query = { query: GET_USERS };
+      const cacheUsers = cache.readQuery(query);
+      const newUsers = [...cacheUsers.users];
+      const index = newUsers.findIndex((d) => d.id === deleteUser);
+      newUsers.splice(index, 1);
+      cache.writeQuery({ ...query, data: { users: newUsers } });
+    },
+  });
+  const { loading, data } = useQuery(GET_USERS);
+
+  return {
+    loading,
+    data,
+    addUser,
+    updateUser,
+    deleteUser,
+  };
 };
 
 export default useUsers;
