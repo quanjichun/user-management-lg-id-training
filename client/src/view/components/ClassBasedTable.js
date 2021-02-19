@@ -29,13 +29,39 @@ class ClassBasedTable extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) {
+    console.log("getDerivedStateFromProps");
     return {
       ...state,
       userNumber: props.data ? props.data.length : 0
     }
   }
 
+  componentDidMount () {
+    console.log("componentDidMount");
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    console.log("shouldComponentUpdate");
+
+    return true;
+  }
+
+  componentWillUnmount () {
+    console.log("componentWillUnmount"); 
+  }
+
+  componentDidUpdate() {
+    console.log("componentDidUpdate"); 
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log("getSnapshotBeforeUpdate");
+
+    return null;
+  }
+
   render() {
+    console.log("render");
     const { data } = this.props;
 
     return (

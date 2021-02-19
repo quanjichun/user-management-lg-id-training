@@ -68,7 +68,7 @@ class SimpleUserManagement extends React.Component {
           <input ref={this.inputRef} type="text" />
           <button onClick={this.onAdd}>{ADD_BUTTON}</button>
         </div>
-        <ClassBasedTable data={this.state.users} onDelete={this.onDelete} />
+        { this.state.users.length > 0 ? <ClassBasedTable data={this.state.users} onDelete={this.onDelete} /> : "" }
       </RootDiv>
     );
   }
