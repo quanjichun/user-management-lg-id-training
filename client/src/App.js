@@ -3,7 +3,7 @@ import "./App.css";
 import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "./apolloClient";
 
-import UserManagement from "./view/UserManagement";
+import UserManagement from "./view/UserManagement-Hook/UserManagement";
 
 function App() {
 

@@ -65,7 +65,7 @@ export const useUsers = () => {
 
   return {
     loading,
-    data,
+    data: !loading ? data.users : [],
     addUser,
     updateUser,
     deleteUser,

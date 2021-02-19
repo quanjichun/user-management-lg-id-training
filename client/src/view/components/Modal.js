@@ -46,11 +46,12 @@ const RootDiv = styled.div`
   }
 `;
 
-const Modal = ({ open, title, columns, data, closeModal, confirmHandler }) => {
+const Modal = ({ open, title, columns, data, onClose, onConfirm }) => {
   const [modalData, setModalData] = useState({});
 
   useEffect(() => {
     const obj = {};
+    console.log(data);
     columns.forEach((c) => {
       obj[c.key] = data[c.key];
 		});
@@ -66,8 +67,8 @@ const Modal = ({ open, title, columns, data, closeModal, confirmHandler }) => {
   };
 
   const confirmClicked = () => {
-    confirmHandler(modalData, title);
-    closeModal();
+    onConfirm(modalData, title);
+    onClose();
   };
 
   return (
@@ -89,7 +90,7 @@ const Modal = ({ open, title, columns, data, closeModal, confirmHandler }) => {
           </div>
           <div className="buttons">
             <button onClick={confirmClicked}>Confirm</button>
-            <button onClick={closeModal}>Cancel</button>
+            <button onClick={onClose}>Cancel</button>
           </div>
         </div>
       </div>

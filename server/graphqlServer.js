@@ -44,6 +44,7 @@ const resolvers = {
       console.log(args);
       console.log(context);
       console.log("#####");
+      console.log(users);
 
       return users;
     },
