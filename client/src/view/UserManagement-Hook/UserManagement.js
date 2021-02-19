@@ -4,6 +4,15 @@ import Modal from "../components/Modal";
 import Table from "../components/Table";
 
 import { useUsers }  from "../../controller/users";
+import {
+  TITLE,
+  ADD_TITLE,
+  EDIT_TITLE,
+  ADD_BUTTON,
+  EDIT_BUTTON,
+  DELETE_BUTTON,
+  FILTER_PLACEHOLDER
+} from "../../data/defData";
 
 const RootDiv = styled.div`
   width: 100%;
@@ -41,14 +50,6 @@ const RootDiv = styled.div`
     }
   }
 `;
-
-const TITLE = "Users";
-const ADD_TITLE = "Add User";
-const EDIT_TITLE = "Edit User";
-const ADD_BUTTON = "Add";
-const EDIT_BUTTON = "Edit";
-const DELETE_BUTTON = "Delete";
-const FILTER_PLACEHOLDER = "Name Filter";
 
 const useModal = (addUser, updateUser) => {
   const [modal, setModal] = useState({
