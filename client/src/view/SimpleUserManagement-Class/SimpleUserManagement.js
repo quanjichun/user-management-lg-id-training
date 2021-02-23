@@ -38,11 +38,11 @@ class SimpleUserManagement extends React.Component {
   }
 
   onDelete = (d) => {
-    const newArr = [...this.state.users];
+    const newArr = this.state.users;
     newArr.splice(d, 1);
     saveArrayToLS(LS_KEY, newArr);
     this.setState({
-      users: [...newArr]
+      users: newArr
     })
   };
 
@@ -51,7 +51,8 @@ class SimpleUserManagement extends React.Component {
 
     if (userName.length === 0) return;
 
-    const newUsers = [...this.state.users, userName];
+    const newUsers = this.state.users;
+    newUsers.push(userName);
     this.setState({
       users: newUsers,
     });

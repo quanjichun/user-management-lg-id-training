@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
+import { Link, useHistory } from "react-router-dom";
 
 const StledTable = styled.table`
   width: 100%;
@@ -11,7 +12,15 @@ const StledTable = styled.table`
 `;
 
 const Table = ({ columns, data, onEdit, onDelete }) => {
-  const actions = [];
+  const history = useHistory();
+  const onDetail = useMemo(() => ({
+    label: "detail",
+    handler: (d) => () => {
+      history.push(d.url);
+    }
+  }), [history]);
+
+  const actions = [onDetail];
 
   if (onEdit) actions.push(onEdit);
   if (onDelete) actions.push(onDelete);
@@ -40,9 +49,14 @@ const Table = ({ columns, data, onEdit, onDelete }) => {
             ) : (
               ""
             )}
-            {columns.map((c, index) => (
-              <td key={`${c.key}_${index}`}>{d[c.key]}</td>
-            ))}
+            {columns.map((c, index) => {
+              let result = d[c.key];
+              if (c.key === "name" && d.url) {
+                result = <Link to={d.url}>{d[c.key]}</Link>;
+              }
+
+              return <td key={`${c.key}_${index}`}>{result}</td>;
+            })}
           </tr>
         ))}
       </tbody>

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const RootDiv = styled.div`
   width: 800px;
@@ -82,7 +83,7 @@ class ClassBasedTable extends React.Component {
                     delete
                   </button>
                 </td>
-                <td>{d}</td>
+                <td><Link to={`/simpleUserManagement/userDetail?params=${JSON.stringify({name: d})}`}>{d}</Link></td>
               </tr>
             ))}
           </tbody>

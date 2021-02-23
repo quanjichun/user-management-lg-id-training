@@ -22,5 +22,8 @@
   "homepage": "https://github.com/quanjichun/user-management-lg-id-training#readme",
   "devDependencies": {
     "concurrently": "^5.3.0"
+  },
+  "dependencies": {
+    "react-router-dom": "^5.2.0"
   }
 }

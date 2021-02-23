@@ -51,6 +51,13 @@ const RootDiv = styled.div`
   }
 `;
 
+export const USER_COLUMNS = [
+  { key: "name", label: "Name" },
+  { key: "email", label: "Email" },
+  { key: "job_title", label: "Job Title" },
+  { key: "team", label: "Team" },
+];
+
 const useModal = (addUser, updateUser) => {
   const [modal, setModal] = useState({
     open: false,
@@ -131,9 +138,14 @@ const useTableAction = (openModal, deleteUser, data) => {
 
   const onAdd = useCallback(() => openModal({}, ADD_TITLE), [openModal]);
 
+  const tableData = useMemo(() => data.map(d => ({
+    ...d,
+    url: `/userManagement/userDetail/${d.id}`
+  })), [data]);
+
   return {
     tableData:
-      filter.length > 0 ? data.filter((d) => d.name.includes(filter)) : data,
+      filter.length > 0 ? tableData.filter((d) => d.name.includes(filter)) : tableData,
     onFilterChanged,
     onEdit,
     onDelete,
@@ -158,16 +170,6 @@ const Header = ({ onFilterChanged, onAdd }) => {
 };
 
 const UserManagement = () => {
-  const columns = useMemo(
-    () => [
-      { key: "name", label: "Name" },
-      { key: "email", label: "Email" },
-      { key: "job_title", label: "Job Title" },
-      { key: "team", label: "Team" },
-    ],
-    []
-  );
-
   const { loading, data, addUser, updateUser, deleteUser } = useUsers();
   const { modal, openModal, confirmModal, closeModal } = useModal(
     addUser,
@@ -181,6 +183,8 @@ const UserManagement = () => {
     onAdd,
   } = useTableAction(openModal, deleteUser, data);
 
+  console.log(tableData);
+
   return (
     <RootDiv>
       <h1>User Management System</h1>
@@ -190,7 +194,7 @@ const UserManagement = () => {
         <div className="content">
           <Header onFilterChanged={onFilterChanged} onAdd={onAdd} />
           <Table
-            columns={columns}
+            columns={USER_COLUMNS}
             data={tableData}
             onEdit={onEdit}
             onDelete={onDelete}
@@ -201,7 +205,7 @@ const UserManagement = () => {
         open={modal.open}
         title={modal.title}
         data={modal.data}
-        columns={columns}
+        columns={USER_COLUMNS}
         onConfirm={confirmModal}
         onClose={closeModal}
       />
