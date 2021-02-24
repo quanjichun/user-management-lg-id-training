@@ -48,11 +48,11 @@ class ClassBasedTable extends React.Component {
   }
 
   componentWillUnmount () {
-    console.log("componentWillUnmount"); 
+    console.log("componentWillUnmount");
   }
 
   componentDidUpdate() {
-    console.log("componentDidUpdate"); 
+    console.log("componentDidUpdate");
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState) {
@@ -83,7 +83,7 @@ class ClassBasedTable extends React.Component {
                     delete
                   </button>
                 </td>
-                <td><Link to={`/simpleUserManagement/userDetail?params=${JSON.stringify({name: d})}`}>{d}</Link></td>
+                <td><Link to={`/simpleUserManagement/userDetail?params=${d}`}>{JSON.parse(d).name}</Link></td>
               </tr>
             ))}
           </tbody>

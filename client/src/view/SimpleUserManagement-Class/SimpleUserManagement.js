@@ -52,12 +52,14 @@ class SimpleUserManagement extends React.Component {
     if (userName.length === 0) return;
 
     const newUsers = this.state.users;
-    newUsers.push(userName);
+    newUsers.push(JSON.stringify({
+      name: userName
+    }));
     this.setState({
       users: newUsers,
     });
     saveArrayToLS(LS_KEY, newUsers);
-    
+
     this.inputRef.current.value = "";
   };
 
