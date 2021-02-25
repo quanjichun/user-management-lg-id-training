@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
-import { useUsers }  from "../../controller/users";
+import { useUser } from "../../controller/users";
 import { USER_COLUMNS } from "./UserManagement";
 
 const RootDiv = styled.div`
@@ -17,45 +17,52 @@ const RootDiv = styled.div`
       border: 1px solid black;
     }
   }
+
+  ul {
+    margin: auto;
+  }
 `;
 
 const UserDetailPage = () => {
   const { userId } = useParams();
-  const { loading, data } = useUsers(false);
+  console.log(userId);
+  const { loading, data } = useUser(Number.parseInt(userId));
 
-  const user = useMemo(() => {
-    let result = {};
-    const id = Number.parseInt(userId);
-
-    if (data && data.length > 0) {
-      result = data.find(d => d.id === id);
-      result = result ? result : {};
-    }
-
-    return result;
-  }, [userId, data])
+  console.log(data);
 
   return (
     <RootDiv>
       {loading ? (
         <div>loading...</div>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              {USER_COLUMNS.map(({ key, label }) => (
-                <th key={`th_${key}`}>{label}</th>
+        <Fragment>
+          <table>
+            <thead>
+              <tr>
+                {USER_COLUMNS.map(({ key, label }) => (
+                  <th key={`th_${key}`}>{label}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {USER_COLUMNS.map(({ key }) => (
+                  <td key={`td_${key}`}>{data[key]}</td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+          {data.teammate.length > 0 ? (
+            <div>
+              <h2>Teamate</h2>
+              {data.teammate.map((d) => (
+                <div key={`teammate_${d.id}`}>{`${d.name}, ${d.email}`}</div>
               ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {USER_COLUMNS.map(({ key }) => (
-                <td key={`td_${key}`}>{user[key]}</td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
+            </div>
+          ) : (
+            ""
+          )}
+        </Fragment>
       )}
     </RootDiv>
   );

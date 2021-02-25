@@ -1,39 +1,56 @@
 import { gql, useQuery, useMutation } from "@apollo/client";
 
+const fragment = gql`
+  fragment userFragment on User {
+    id
+    name
+    email
+    team
+  }
+`;
+
+const GET_USER = gql`
+  query user($id: Int!) {
+    user(id: $id) {
+      ...userFragment
+      job_title
+      teammate {
+        ...userFragment
+        job_title
+      }
+    }
+  }
+  ${fragment}
+`;
+
 const GET_USERS = gql`
   query users($skipTitle: Boolean! = true) {
     users {
-      id
-      name
-      email
-      team
+      ...userFragment
       job_title @skip(if: $skipTitle)
     }
   }
+  ${fragment}
 `;
 
 const ADD_USER = gql`
   mutation addUser($user: UserInput) {
     addUser(user: $user) {
-      id
-      name
-      email
+      ...userFragment
       job_title
-      team
     }
   }
+  ${fragment}
 `;
 
 const UPDATE_USER = gql`
   mutation updateUser($user: UserInput) {
     updateUser(user: $user) {
-      id
-      name
-      email
+      ...userFragment
       job_title
-      team
     }
   }
+  ${fragment}
 `;
 
 const DELETE_USER = gql`
@@ -47,7 +64,10 @@ export const useUsers = (skipTitle) => {
     update(cache, { data: { addUser } }) {
       const query = { query: GET_USERS };
       const cacheUsers = cache.readQuery(query);
-      cache.writeQuery({ ...query, data: { users: [...cacheUsers.users, addUser] } });
+      cache.writeQuery({
+        ...query,
+        data: { users: [...cacheUsers.users, addUser] },
+      });
     },
   });
   const [updateUser] = useMutation(UPDATE_USER);
@@ -63,8 +83,8 @@ export const useUsers = (skipTitle) => {
   });
   const { loading, data } = useQuery(GET_USERS, {
     variables: {
-      skipTitle: skipTitle
-    }
+      skipTitle: skipTitle,
+    },
   });
 
   console.log(data);
@@ -75,6 +95,19 @@ export const useUsers = (skipTitle) => {
     addUser,
     updateUser,
     deleteUser,
+  };
+};
+
+export const useUser = (id) => {
+  const { loading, data } = useQuery(GET_USER, {
+    variables: {
+      id,
+    },
+  });
+
+  return {
+    loading,
+    data: !loading ? data.user : {},
   };
 };
 
