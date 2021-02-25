@@ -10,6 +10,9 @@ const Index = () => {
       <li>
         <Link to="/userManagement">User Management</Link>
       </li>
+      <li>
+        <Link to="/teamMemberList">Team Member List</Link>
+      </li>
     </ul>
   );
 };

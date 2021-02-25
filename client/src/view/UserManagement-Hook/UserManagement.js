@@ -170,7 +170,7 @@ const Header = ({ onFilterChanged, onAdd }) => {
 };
 
 const UserManagement = () => {
-  const { loading, data, addUser, updateUser, deleteUser } = useUsers();
+  const { loading, data, addUser, updateUser, deleteUser } = useUsers(false);
   const { modal, openModal, confirmModal, closeModal } = useModal(
     addUser,
     updateUser

@@ -11,6 +11,7 @@ import SimpleUserManagement from "./view/SimpleUserManagement-Class/SimpleUserMa
 import Index from "./view/Index";
 import UserDetailPage from "./view/UserManagement-Hook/UserDetailPage";
 import SimpleUserDetailPage from "./view/SimpleUserManagement-Class/SimpleUserDetailPage";
+import TeamMemberList from "./view/UserManagement-Hook/TeamMemberList";
 
 const BackBtn = () => {
   const history = useHistory();
@@ -49,6 +50,10 @@ const SystemRouter = () => {
         <Route path="/userManagement">
           <BackBtn />
           <UserManagement />
+        </Route>
+        <Route path="/teamMemberList">
+          <BackBtn />
+          <TeamMemberList />
         </Route>
         <Route path="/">
           <Index />

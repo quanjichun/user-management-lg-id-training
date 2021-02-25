@@ -1,13 +1,13 @@
 import { gql, useQuery, useMutation } from "@apollo/client";
 
 const GET_USERS = gql`
-  query users {
+  query users($skipTitle: Boolean! = true) {
     users {
       id
       name
       email
-      job_title
       team
+      job_title @skip(if: $skipTitle)
     }
   }
 `;
@@ -42,7 +42,7 @@ const DELETE_USER = gql`
   }
 `;
 
-export const useUsers = () => {
+export const useUsers = (skipTitle) => {
   const [addUser] = useMutation(ADD_USER, {
     update(cache, { data: { addUser } }) {
       const query = { query: GET_USERS };
@@ -61,7 +61,13 @@ export const useUsers = () => {
       cache.writeQuery({ ...query, data: { users: newUsers } });
     },
   });
-  const { loading, data } = useQuery(GET_USERS);
+  const { loading, data } = useQuery(GET_USERS, {
+    variables: {
+      skipTitle: skipTitle
+    }
+  });
+
+  console.log(data);
 
   return {
     loading,

@@ -21,7 +21,7 @@ const RootDiv = styled.div`
 
 const UserDetailPage = () => {
   const { userId } = useParams();
-  const { loading, data } = useUsers();
+  const { loading, data } = useUsers(false);
 
   const user = useMemo(() => {
     let result = {};
