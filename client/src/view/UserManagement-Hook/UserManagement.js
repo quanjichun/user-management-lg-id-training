@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "../components/Modal";
 import Table from "../components/Table";
 
-import { useUsers }  from "../../controller/users";
+import { useUsers } from "../../controller/users";
 import {
   TITLE,
   ADD_TITLE,
@@ -11,7 +11,7 @@ import {
   ADD_BUTTON,
   EDIT_BUTTON,
   DELETE_BUTTON,
-  FILTER_PLACEHOLDER
+  FILTER_PLACEHOLDER,
 } from "../../data/defData";
 
 const RootDiv = styled.div`
@@ -47,6 +47,20 @@ const RootDiv = styled.div`
           margin-right: 20px;
         }
       }
+    }
+  }
+`;
+
+const EditDiv = styled.div`
+  .item {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+
+    > :first-child {
+      margin-right: 10px;
+      width: 70px;
+      text-align: right;
     }
   }
 `;
@@ -138,14 +152,20 @@ const useTableAction = (openModal, deleteUser, data) => {
 
   const onAdd = useCallback(() => openModal({}, ADD_TITLE), [openModal]);
 
-  const tableData = useMemo(() => data.map(d => ({
-    ...d,
-    url: `/userManagement/userDetail/${d.id}`
-  })), [data]);
+  const tableData = useMemo(
+    () =>
+      data.map((d) => ({
+        ...d,
+        url: `/userManagement/userDetail/${d.id}`,
+      })),
+    [data]
+  );
 
   return {
     tableData:
-      filter.length > 0 ? tableData.filter((d) => d.name.includes(filter)) : tableData,
+      filter.length > 0
+        ? tableData.filter((d) => d.name.includes(filter))
+        : tableData,
     onFilterChanged,
     onEdit,
     onDelete,
@@ -166,6 +186,50 @@ const Header = ({ onFilterChanged, onAdd }) => {
         <button onClick={onAdd}>{ADD_BUTTON}</button>
       </div>
     </div>
+  );
+};
+
+const EditPopup = ({ open, title, columns, data, onClose, onConfirm }) => {
+  const [editData, setEditData] = useState({});
+
+  useEffect(() => {
+    const obj = {};
+    console.log(data);
+    columns.forEach((c) => {
+      obj[c.key] = data[c.key];
+    });
+    obj["id"] = data["id"];
+    setEditData(obj);
+  }, [data, columns]);
+
+  const inputChanged = (e) => {
+    setEditData({
+      ...editData,
+      [e.target.getAttribute("data-key")]: e.target.value,
+    });
+  };
+
+  const confirmClicked = () => {
+    onConfirm(editData, title);
+    onClose();
+  };
+
+  return (
+    <Modal open={open} onClose={onClose} onConfirm={confirmClicked}>
+      <EditDiv>
+        <h1>{title}</h1>
+        {columns.map((c) => (
+          <div className="item" key={`popup_${c.key}`}>
+            <div>{`${c.label}:`}</div>
+            <input
+              data-key={c.key}
+              value={editData[c.key] ? editData[c.key] : ""}
+              onChange={inputChanged}
+            />
+          </div>
+        ))}
+      </EditDiv>
+    </Modal>
   );
 };
 
@@ -201,7 +265,7 @@ const UserManagement = () => {
           />
         </div>
       )}
-      <Modal
+      <EditPopup
         open={modal.open}
         title={modal.title}
         data={modal.data}

@@ -46,7 +46,7 @@ const users = [
     team: "IDDX Task",
   },
 ];
-let userIndex = 1;
+let userIndex = 2;
 
 const resolvers = {
   Query: {

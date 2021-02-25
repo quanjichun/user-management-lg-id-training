@@ -38,59 +38,26 @@ const RootDiv = styled.div`
 
     .buttons {
       margin: 10px;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 12px;
 
-      > :first-child {
-        margin-right: 20px;
+      button {
+        flex-grow: 1;
       }
     }
   }
 `;
 
-const Modal = ({ open, title, columns, data, onClose, onConfirm }) => {
-  const [modalData, setModalData] = useState({});
-
-  useEffect(() => {
-    const obj = {};
-    console.log(data);
-    columns.forEach((c) => {
-      obj[c.key] = data[c.key];
-		});
-		obj["id"] = data["id"];
-    setModalData(obj);
-  }, [data, columns]);
-
-  const inputChanged = (e) => {
-    setModalData({
-      ...modalData,
-      [e.target.getAttribute("data-key")]: e.target.value,
-    });
-  };
-
-  const confirmClicked = () => {
-    onConfirm(modalData, title);
-    onClose();
-  };
-
+const Modal = ({ open, onClose, onConfirm, children }) => {
   return (
     <RootDiv>
       <div className={`modal ${open ? "" : "display-none"}`}>
         <div className="container">
-          <h1>{title}</h1>
-          <div>
-            {columns.map((c) => (
-              <div className="item" key={`popup_${c.key}`}>
-                <div>{`${c.label}:`}</div>
-                <input
-                  data-key={c.key}
-                  value={modalData[c.key] ? modalData[c.key] : ""}
-                  onChange={inputChanged}
-                />
-              </div>
-            ))}
-          </div>
+          {children}
           <div className="buttons">
-            <button onClick={confirmClicked}>Confirm</button>
-            <button onClick={onClose}>Cancel</button>
+            {onConfirm ? <button onClick={onConfirm}>Confirm</button> : ""}
+            {onClose ? <button onClick={onClose}>Cancel</button> : ""}
           </div>
         </div>
       </div>
